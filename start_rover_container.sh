@@ -19,4 +19,4 @@ docker run \
 	--pid=host \
 	--name umrt-rover \
 	--pull=always \
-    ghcr.io/umroboticsteam/rover:main
+    ghcr.io/umroboticsteam/umrt-rover:main
