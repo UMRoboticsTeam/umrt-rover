@@ -19,4 +19,7 @@ docker run \
 	--pid=host \
 	--name umrt-rover \
 	--pull=always \
-    ghcr.io/umroboticsteam/umrt-rover:main
+    ghcr.io/umroboticsteam/umrt-rover:main \
+	-v $ROS_WORKSPACE/umrt-rover/fastdds_profiles/fastdds_LoBW.xml:/fastdds_LoBW.xml:ro \
+  	-e RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
+  	-e FASTRTPS_DEFAULT_PROFILES_FILE=/fastdds_LoBW.xml 

@@ -65,4 +65,7 @@ docker run -it --rm \
   -e ARMCAM1="$ARMCAM1" \
   --env="QT_X11_NO_MITSHM=1" \
   --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-    ghcr.io/umroboticsteam/umrt-rover:main
+    ghcr.io/umroboticsteam/umrt-rover:main \
+  -v $ROS_WORKSPACE/umrt-rover/fastdds_profiles/fastdds_HiBW.xml:/fastdds_HiBW.xml:ro \
+  -e RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
+  -e FASTRTPS_DEFAULT_PROFILES_FILE=/fastdds_HiBW.xml 

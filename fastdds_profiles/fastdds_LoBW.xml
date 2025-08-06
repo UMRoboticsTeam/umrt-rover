@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<profiles xmlns="http://www.eprosima.com/XMLSchemas/fastrtps_profiles">
+    <participant profile_name="fastdds_LowBW" is_default_profile="true">
+        <rtps>
+             <builtin>
+                <initialPeersList>
+                    <locator>
+                        <udpv4>
+                            <address>192.168.2.5</address>
+                            <address>192.168.2.7</address>
+                            <address>192.168.2.8</address>
+                            <port>7412</port>
+                        </udpv4>
+                        </locator>
+                        <locator>
+                        <tcpv4>
+                            <address>192.168.2.5</address>
+                            <address>192.168.2.7</address>
+                            <address>192.168.2.8</address>
+                            <port>7412</port>
+                        </tcpv4>
+                        </locator>
+                </initialPeersList>
+            </builtin>
+        </rtps>
+    </participant>
+</profiles>
