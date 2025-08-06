@@ -6,6 +6,7 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf -
     sudo apt update && sudo apt install -y \
         less \
         nano \
+        umrt-geiger-interface=0.1.2 \
         ros-humble-rviz2 \
         ros-humble-umrt-ros-poe-cam=1.0.0-0jammy \
         ros-humble-umrt-project-perry-description=0.0.6-0jammy \
