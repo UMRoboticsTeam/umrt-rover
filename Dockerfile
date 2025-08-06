@@ -10,7 +10,6 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf -
         ros-humble-umrt-ros-poe-cam=1.0.0-0jammy \
         ros-humble-umrt-project-perry-description=0.0.6-0jammy \
         ros-humble-umrt-drivetrain-ros=0.1.2-0jammy \
-        umrt-geiger-interface=0.1.2 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN sudo rm -f /etc/apt/sources.list.d/umrt_source.list
