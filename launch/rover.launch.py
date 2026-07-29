@@ -67,6 +67,13 @@ def generate_launch_description():
         description="Name for the device using the static bridge.",
     )
 
+    # only socket
+    DeclareLaunchArgument(
+        "only_socket",
+        default_value="True",
+        description="Either launch rover_drivetrain.launch.py or ros2_socketcan.launch.xml, but not both.",
+    )
+
     """
     Variables
     """
@@ -74,16 +81,17 @@ def generate_launch_description():
     use_mock_hardware = LaunchConfiguration("use_mock_hardware")
     can_interface = LaunchConfiguration("can_interface")
     device_name = LaunchConfiguration("device_name")
+    only_socket = LaunchConfiguration("only_socket")
 
     """
     Nodes
     """
-    imu_node = Node(
+    '''imu_node = Node(
         package='umrt-emb-imu-node',
         executable='umrt-emb-imu-node',
         name='imu',
         namespace='imu'
-    )
+    )'''
 
     static_bridge_node = Node(
         package='ros2_j1939_babbler',
@@ -140,11 +148,13 @@ def generate_launch_description():
     Launch
     """
     rover = [
-        drivetrain_launch,
         ros2_socket_launch,
-        static_bridge_node,
         # imu_node,
         # gps_launch
     ]
+
+    if only_socket == False:
+        rover.append(drivetrain_launch)
+        rover.append(static_bridge_node)
 
     return LaunchDescription(rover)
