@@ -138,9 +138,9 @@ def generate_launch_description():
     )
 
     # Launch the GPS Nodes, and Heading Node 
-    gps_launch = IncludeLaunchDescription(
+    localization_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(gps_launch_dir, 'gps.launch.py')
+            os.path.join(gps_launch_dir, 'localization.launch.py')
         )
     )
 
@@ -150,7 +150,7 @@ def generate_launch_description():
     rover = [
         ros2_socket_launch,
         # imu_node,
-        # gps_launch
+        # localization_launch
     ]
 
     if only_socket == False:
