@@ -40,21 +40,21 @@ def generate_launch_description():
     Launch Arguments
     """
     #   GUI
-    DeclareLaunchArgument(
+    gui_arg = DeclareLaunchArgument(
         "gui",
         default_value="True",
         description="Start RViz2 automatically with this launch file.",
     )
     
     #   Simulation or Real
-    DeclareLaunchArgument(
+    use_mock_hardware_arg = DeclareLaunchArgument(
         "use_mock_hardware",
         default_value="False",
         description="Start robot with mock hardware mirroring command to its states.",
     )
 
     #   CAN Interface
-    DeclareLaunchArgument(
+    can_interface_arg = DeclareLaunchArgument(
         "can_interface",
         default_value="can0",
         description="CAN interface to use (e.g., 'can0' for real hardware, 'vcan0' for virtual).",
@@ -67,13 +67,6 @@ def generate_launch_description():
         description="Name for the device using the static bridge.",
     )
 
-    # only socket
-    DeclareLaunchArgument(
-        "only_socket",
-        default_value="True",
-        description="Either launch rover_drivetrain.launch.py or ros2_socketcan.launch.xml, but not both.",
-    )
-
     """
     Variables
     """
@@ -81,7 +74,6 @@ def generate_launch_description():
     use_mock_hardware = LaunchConfiguration("use_mock_hardware")
     can_interface = LaunchConfiguration("can_interface")
     device_name = LaunchConfiguration("device_name")
-    only_socket = LaunchConfiguration("only_socket")
 
     """
     Nodes
@@ -148,13 +140,15 @@ def generate_launch_description():
     Launch
     """
     rover = [
+        gui_arg,
+        use_mock_hardware_arg,
+        can_interface_arg,
+        device_name,
         ros2_socket_launch,
+        drivetrain_launch,
+        gps_launch,
         # imu_node,
         # localization_launch
     ]
-
-    if only_socket == False:
-        rover.append(drivetrain_launch)
-        rover.append(static_bridge_node)
 
     return LaunchDescription(rover)
