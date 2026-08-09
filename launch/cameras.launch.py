@@ -29,14 +29,14 @@ def generate_launch_description():
     """
         
     #   Rover Cameras
-    DeclareLaunchArgument(
+    rover_cameras_arg = DeclareLaunchArgument(
         "rover_cameras",
         default_value="True",
         description="Launch only the rover cameras.",
     )
 
     #   Arm Cameras
-    DeclareLaunchArgument(
+    robotic_arm_cameras_arg = DeclareLaunchArgument(
         "robotic_arm_cameras",
         default_value="True",
         description="Launch only the robotic arm cameras.",
@@ -87,6 +87,8 @@ def generate_launch_description():
     Launch
     """
     vision = [
+        rover_cameras_arg,
+        robotic_arm_cameras_arg,
         poe_cam,
         compressed_conversion,
         serial_cams
