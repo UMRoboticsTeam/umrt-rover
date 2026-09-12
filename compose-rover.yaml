@@ -1,0 +1,30 @@
+services:
+  bridge_rover:
+    image: "${BRIDGE_ROVER_IMAGE:-localhost/umrt-rover}"
+    container_name: bridge_rover
+    stdin_open: true
+    tty: true
+    init: true
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+#    runtime: nvidia
+#    gpus: all
+    environment:
+      - DISPLAY=${DISPLAY}
+#    devices:
+#      - "/dev/video0:/dev/video0" # expose USB cam testing
+    volumes:
+      - "${RES_CONFIG_DIR:-./config}:/${BRIDGE_WORKSPACE:-/workspace/umrt-zenoh-bridge}/config"
+      - "./tmp/mobile_publisher.launch.py:/opt/ros/humble/share/umrt-ros-poe-cam/launch/mobile_publisher.launch.py"
+    networks:
+      bridge_lo:
+        ipv4_address: 10.0.10.59
+      bridge_hi:
+        ipv4_address: 10.0.20.59
+
+networks:
+  bridge_lo:
+    external: true
+  bridge_hi:
+    external: true

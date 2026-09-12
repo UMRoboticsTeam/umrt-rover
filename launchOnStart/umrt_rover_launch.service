@@ -1,0 +1,12 @@
+[UNIT]
+Description=Umrt Rover AutoStart Launcher
+After=docker.service network-online.target
+Requires=docker.service network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=<file path>
+
+[Install]
+WantedBy=multi-user.target

@@ -37,3 +37,17 @@ An example command is:
 `docker run --rm -it --name umrt-rover --pull=always ghcr.io/umroboticsteam/umrt-rover:main`
 This always checks for and downloads the latest image before starting, which may or may not be the ideal behaviour.
 If a specific version is wanted, such as `v0.0.1`, simply change `umrt-rover:main` to `umrt-rover:v0.0.1`.
+
+
+## Dom's Notes for Testing - Remove before git push
+move the autostart service /etc/systemd/system/myservice.service
+
+# Reload the systemd daemon
+sudo systemctl daemon-reload
+
+# Start the service immediately
+sudo systemctl start myservice.service
+
+# Enable the service to launch automatically on system boot
+sudo systemctl enable myservice.service
+
