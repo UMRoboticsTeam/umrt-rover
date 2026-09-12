@@ -45,6 +45,8 @@ c_exit() {
 # returns: none
 ################################
 main() {
+  INTERFERENCE="can1"
+  
   echo "//****************** UMRT ROVER LAUNCHER ******************//"
   echo "[INFO - $(date +"%b %d %T")] Starting UMRT Rover"
 
@@ -65,6 +67,10 @@ main() {
   
   echo "[INFO - $(date +"%b %d %T")] Starting POE Cams"
   ros2 launch umrt-ros-poe-cam mobile_publisher.launch.py &
+  
+  while ! ip link show "$INTERFERENCE" 2>/dev/null | grep-q "state UP"; do
+  	sleep 2
+  done
   
   echo "[INFO - $(date +"%b %d %T")] Starting Drive Train"
   ros2 launch launch rover.launch.py > /dev/null &
