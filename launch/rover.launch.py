@@ -56,12 +56,12 @@ def generate_launch_description():
     #   CAN Interface
     can_interface_arg = DeclareLaunchArgument(
         "can_interface",
-        default_value="can1",
+        default_value="can0",
         description="CAN interface to use (e.g., 'can0' for real hardware, 'vcan0' for virtual).",
     )
 
     #   ROS 2 J1939 Static Bridge name
-    device_name_arg = DeclareLaunchArgument(
+    DeclareLaunchArgument(
         "device_name",
         default_value="umrt_ros_controller",
         description="Name for the device using the static bridge.",
@@ -91,7 +91,7 @@ def generate_launch_description():
         name='static_bridge',
         namespace='static_bridge',
         parameters = [{
-            'sensor_name': device_name,
+            'device_name': device_name,
             'can_interface': can_interface,
             'device_ID': 0x80,
         }]
@@ -116,11 +116,11 @@ def generate_launch_description():
     )
 
     ros2_socket_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
+        XMLLaunchDescriptionSource([
             PathJoinSubstitution([
                 FindPackageShare('ros2_socketcan'),
                 'launch',
-                'socket_can_sender.launch.py'
+                'socket_can_bridge.launch.xml'
             ])
         ]),
         launch_arguments={
@@ -143,11 +143,12 @@ def generate_launch_description():
         gui_arg,
         use_mock_hardware_arg,
         can_interface_arg,
-        device_name_arg,
-        static_bridge_node,
+        device_name,
         ros2_socket_launch,
         drivetrain_launch,
-        #localization_launch
+        gps_launch,
+        # imu_node,
+        # localization_launch
     ]
 
     return LaunchDescription(rover)
