@@ -6,7 +6,7 @@ RESET_TXT="\033[0m"
 # require_file
 #   Looks to see if the required file is found on the device
 #
-# Author: Connor 
+# Author: Connor
 # parameter: path - the path to the file
 #
 # returns: none
@@ -16,7 +16,7 @@ require_file() {
 
   if [[ ! -f "${path}" ]]; then
     echo -e "[${RED_TXT}ERRO${RESET_TXT} - $(date +"%b %d %T")] Missing required file: ${path}" >&2
-    c_exit 
+    c_exit
   fi
 }
 
@@ -45,14 +45,14 @@ c_exit() {
 # returns: none
 ################################
 main() {
-  INTERFACE="can0"
-  
+  INTERFACE="can1"
+
   echo "//****************** UMRT ROVER LAUNCHER ******************//"
   echo "[INFO - $(date +"%b %d %T")] Starting UMRT Rover"
 
   echo "[INFO - $(date +"%b %d %T")] Sourcing ros_entrypoint.sh"
   source ./ros_entrypoint.sh
-  
+
   echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Stack"
   echo "[INFO - $(date +"%b %d %T")] Checking File Requirements"
 
@@ -64,18 +64,18 @@ main() {
 
   echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Base High"
   zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-hi.json5" > /dev/null &
-  
+
   echo "[INFO - $(date +"%b %d %T")] Starting POE Cams"
   #ros2 launch umrt-ros-poe-cam mobile_publisher.launch.py &
-  
+
   while ! ip link show "$INTERFACE" 2>/dev/null | grep -q "<NOARP,UP,LOWER_UP>"; do
     echo "waiting"
     sleep 2
   done
-  
+
   echo "[INFO - $(date +"%b %d %T")] Starting Drive Train"
   ros2 launch launch rover.launch.py
-    
+
   echo "[INFO - $(date +"%b %d %T")] Rover Launch Complete Successfully"
   c_exit
 }

@@ -22,16 +22,37 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
     --mount=type=secret,id=apt_pubkey,target=/etc/apt/keyrings/umrt.asc,mode=0644 \
     rm -f /etc/apt/sources.list.d/ros2.list \
     && apt-get update && apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-overwrite" \
-        less nano ffmpeg iputils-ping ros-humble-rviz2 ros-humble-umrt-arm-ros-firmware \
-        umrt-geiger-interface=0.1.2 ros-humble-umrt-ros-poe-cam iproute2 \ 
-        ros-humble-umrt-serial-cam-ros ros-humble-umrt-project-perry-description \
-        ros-humble-umrt-drivetrain-ros ros-humble-umrt-emb-imu-ros \
-        zenoh-bridge-ros2dds=1.3.4 ros-humble-umrt-localization-ros \
-        ros-humble-joy ros-humble-joy-teleop ros-humble-teleop-twist-joy \
-        ros-humble-foxglove-msgs ros-humble-foxglove-compressed-video-transport \
-        ros-humble-network-bridge ros-humble-usb-cam ros-humble-vision-msgs ros-humble-image-transport \
-        ros-humble-image-transport-plugins ros-humble-ffmpeg-image-transport ros-humble-ffmpeg-image-transport-msgs \
-        ros-humble-depthai-v3 ros-humble-depthai-ros-msgs-v3 ros-humble-depthai-bridge-v3 umrt-imu-interface \
+        ffmpeg \
+	iproute2 \
+	iputils-ping \
+	less \
+	nano \
+	ros-humble-depthai-bridge-v3 \
+	ros-humble-depthai-ros-msgs-v3 \
+	ros-humble-depthai-v3 \
+	ros-humble-ffmpeg-image-transport \
+	ros-humble-ffmpeg-image-transport-msgs \
+	ros-humble-foxglove-compressed-video-transport \
+	ros-humble-foxglove-msgs \
+	ros-humble-image-transport \
+	ros-humble-image-transport-plugins \
+	ros-humble-joy \
+	ros-humble-joy-teleop \
+	ros-humble-network-bridge \
+	ros-humble-rviz2 \
+	ros-humble-teleop-twist-joy \
+	ros-humble-umrt-arm-ros-firmware \
+	ros-humble-umrt-drivetrain-ros \
+	ros-humble-umrt-emb-imu-ros \
+	ros-humble-umrt-localization-ros \
+	ros-humble-umrt-project-perry-description \
+	ros-humble-umrt-ros-poe-cam \
+	ros-humble-umrt-serial-cam-ros \
+	ros-humble-usb-cam \
+	ros-humble-vision-msgs \
+	umrt-geiger-interface=0.1.2 \
+	umrt-imu-interface \
+	zenoh-bridge-ros2dds=1.3.4 \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /etc/apt/sources.list.d/umrt_source.list
 

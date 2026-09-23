@@ -25,24 +25,34 @@ def generate_launch_description():
     drivetrain_launch_dir = os.path.join(
         get_package_share_directory('umrt-drivetrain-ros'), 'launch')
     
-
+    gps_launch_dir = get_package_share_directory('umrt-localization-ros')
+    
     """
     Nodes
     """
-    gps_node = Node(
-        package='gpsx',
-        executable='gps_node',
-        name='gps',
-        namespace='gps',
-        parameters=[{
-            'comm_port':"/dev/ttyUSB0",
-            'comm_speed': 4800
-        }]
+    
+    gps_launch_path = os.path.join(
+        gps_launch_dir,
+        'launch',
+        'gps.launch.py'
     )
 
+    # Both GPS, exactly as started by gps.launch.py.
+    gps = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(gps_launch_path)
+    )
+
+    # heading_node, listening to the starboard's RELPOSNED topic.
+    heading_node = Node(
+        package='umrt-localization-ros',
+        executable='heading_node',
+        name='heading_node',
+        parameters=[{'relpos_topic': '/gps_starboard/ubx_nav_rel_pos_ned'}]
+    )
+    
     imu_node = Node(
-        package='umrt-emb-imu-node',
-        executable='umrt-emb-imu-node',
+        package='umrt-emb-imu-ros',
+        executable='umrt-emb-imu-ros',
         name='imu',
         namespace='imu'
     )
@@ -62,7 +72,8 @@ def generate_launch_description():
     rover = [
         drivetrain_launch,
         imu_node,
-        gps_node
+        gps,
+        heading_node,
     ]
 
     launch_entities = rover

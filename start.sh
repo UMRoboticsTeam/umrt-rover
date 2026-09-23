@@ -1,8 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-xhost +local:root > /dev/null 2>&1
-
 CONFIG_DIR="./config"
 
 ################################
@@ -31,6 +29,7 @@ export RES_CONFIG_DIR=$(realpath "${CONFIG_DIR}")
 # Starting Docker Container
 docker compose -f "./compose-rover.yaml" up -d --force-recreate --renew-anon-volumes
 
+# Waiting for container to Start
 sleep 2
 
 PID=$(docker inspect -f '{{.State.Pid}}' bridge_rover 2>/dev/null)
@@ -39,8 +38,16 @@ while [ -z "$PID" ] || [ "$PID" -eq 0 ]; do
     PID=$(docker inspect -f '{{.State.Pid}}' bridge_rover 2>/dev/null)
 done
 
-ip link set can0 down
+# Moving the can Network inside the container
+IFACE=can1
+TYPE=$(ip -d -j link show "$IFACE" | grep -o '"info_kind":"[^"]*"' | cut -d'"' -f4)
 
-ip link set can0 netns "$PID"
+ip link set "$IFACE" down
 
-nsenter -t "$PID" -n ip link set can0 up
+ip link set "$IFACE" netns "$PID"
+
+if [ "$TYPE" = "can" ]; then
+	nsenter -t "$PID" -n ip link set "$IFACE" type can bitrate 500000
+fi
+
+nsenter -t "$PID" -n ip link set "$IFACE" up
