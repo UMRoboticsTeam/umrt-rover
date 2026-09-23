@@ -45,7 +45,7 @@ c_exit() {
 # returns: none
 ################################
 main() {
-  INTERFERENCE="can1"
+  INTERFACE="can0"
   
   echo "//****************** UMRT ROVER LAUNCHER ******************//"
   echo "[INFO - $(date +"%b %d %T")] Starting UMRT Rover"
@@ -66,14 +66,15 @@ main() {
   zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-hi.json5" > /dev/null &
   
   echo "[INFO - $(date +"%b %d %T")] Starting POE Cams"
-  ros2 launch umrt-ros-poe-cam mobile_publisher.launch.py &
+  #ros2 launch umrt-ros-poe-cam mobile_publisher.launch.py &
   
-  while ! ip link show "$INTERFERENCE" 2>/dev/null | grep -q "state UP"; do
-  	sleep 2
+  while ! ip link show "$INTERFACE" 2>/dev/null | grep -q "<NOARP,UP,LOWER_UP>"; do
+    echo "waiting"
+    sleep 2
   done
   
   echo "[INFO - $(date +"%b %d %T")] Starting Drive Train"
-  ros2 launch launch rover.launch.py > /dev/null &
+  ros2 launch launch rover.launch.py
     
   echo "[INFO - $(date +"%b %d %T")] Rover Launch Complete Successfully"
   c_exit

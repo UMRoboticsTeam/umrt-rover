@@ -39,8 +39,8 @@ while [ -z "$PID" ] || [ "$PID" -eq 0 ]; do
     PID=$(docker inspect -f '{{.State.Pid}}' bridge_rover 2>/dev/null)
 done
 
-ip link set can1 down
-ip link set can1 netns "$PID"
+ip link set can0 down
 
-docker exec bridge_rover ip link set can1 up type can bitrate 500000
+ip link set can0 netns "$PID"
 
+nsenter -t "$PID" -n ip link set can0 up

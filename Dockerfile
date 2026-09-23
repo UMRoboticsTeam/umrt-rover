@@ -23,7 +23,7 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
     rm -f /etc/apt/sources.list.d/ros2.list \
     && apt-get update && apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-overwrite" \
         less nano ffmpeg iputils-ping ros-humble-rviz2 ros-humble-umrt-arm-ros-firmware \
-        umrt-geiger-interface=0.1.2 ros-humble-umrt-ros-poe-cam \ 
+        umrt-geiger-interface=0.1.2 ros-humble-umrt-ros-poe-cam iproute2 \ 
         ros-humble-umrt-serial-cam-ros ros-humble-umrt-project-perry-description \
         ros-humble-umrt-drivetrain-ros ros-humble-umrt-emb-imu-ros \
         zenoh-bridge-ros2dds=1.3.4 ros-humble-umrt-localization-ros \
@@ -31,7 +31,7 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
         ros-humble-foxglove-msgs ros-humble-foxglove-compressed-video-transport \
         ros-humble-network-bridge ros-humble-usb-cam ros-humble-vision-msgs ros-humble-image-transport \
         ros-humble-image-transport-plugins ros-humble-ffmpeg-image-transport ros-humble-ffmpeg-image-transport-msgs \
-        ros-humble-depthai-v3 ros-humble-depthai-ros-msgs-v3 ros-humble-depthai-bridge-v3 \
+        ros-humble-depthai-v3 ros-humble-depthai-ros-msgs-v3 ros-humble-depthai-bridge-v3 umrt-imu-interface \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /etc/apt/sources.list.d/umrt_source.list
 
