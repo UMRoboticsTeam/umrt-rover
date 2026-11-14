@@ -68,7 +68,7 @@ main() {
   echo "[INFO - $(date +"%b %d %T")] Starting POE Cams"
   #ros2 launch umrt-ros-poe-cam mobile_publisher.launch.py &
 
-  while ! ip link show "$INTERFACE" 2>/dev/null | grep -q "<NOARP,UP,LOWER_UP>"; do
+  while ! ip link show "$INTERFACE" 2>/dev/null | grep -q "<NOARP,UP,LOWER_UP[^>]*>"; do
     echo "waiting"
     sleep 2
   done
