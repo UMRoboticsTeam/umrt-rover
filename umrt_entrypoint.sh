@@ -45,7 +45,9 @@ c_exit() {
 # returns: none
 ################################
 main() {
-  INTERFACE="can1"
+  if [ -z "$CAN_INTERFACE" ]; then
+    CAN_INTERFACE="can1"
+  fi
 
   echo "//****************** UMRT ROVER LAUNCHER ******************//"
   echo "[INFO - $(date +"%b %d %T")] Starting UMRT Rover"
@@ -53,28 +55,56 @@ main() {
   echo "[INFO - $(date +"%b %d %T")] Sourcing ros_entrypoint.sh"
   source ./ros_entrypoint.sh
 
-  echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Stack"
-  echo "[INFO - $(date +"%b %d %T")] Checking File Requirements"
+  if  [ "$BOOT_LO_NET" != "false" ]; then
+    echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover Low Network"
+    require_file "${BRIDGE_WORKSPACE}/config/rover-lo.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-lo.json" > /dev/null &
+  fi
 
-  require_file "${BRIDGE_WORKSPACE}/config/rover-lo.json5"
-  require_file "${BRIDGE_WORKSPACE}/config/rover-hi.json5"
+  if [ "$BOOT_HI_NET" != "false" ]; then
+    echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover High Network"
+    require_file "${BRIDGE_WORKSPACE}/config/rover-hi.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-hi.json" > /dev/null &
+  fi
+  
+  if [ "$BOOT_HI_F_LO_NET" != "false" ]; then
+    echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover High Fail Low Network"
+    require_file "${BRIDGE_WORKSPACE}/config/rover-hi_f_lo.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-hi_f_lo.json" > /dev/null &
+  fi
+  
+  if [ "$BOOT_LO_F_HI_NET" != "false" ]; then
+    echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover Low Fail High Network"
+    require_file "${BRIDGE_WORKSPACE}/config/rover-lo_f_hi.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-lo_f_hi.json" > /dev/null &
+  fi
+  
+  if [ "$BOOT_LOC_NET" != "false" ]; then
+    echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover Local Network"
+    require_file "${BRIDGE_WORKSPACE}/config/rover-loc.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-loc.json" > /dev/null &
+  fi
+  
+  if [ "$BOOT_ALL_NET" != "false" ]; then
+    echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover All Network"
+    require_file "${BRIDGE_WORKSPACE}/config/rover-all.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-all.json" > /dev/null &
+  fi
+  
+  if [ "$BOOT_CAM" != "false" ]; then
+    echo "[INFO - $(date +"%b %d %T")] Starting POE Cams"
+    ros2 launch umrt-ros-poe-cam mobile_publisher.launch.py &
+  fi
 
-  echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Base Low"
-  zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-lo.json5" > /dev/null &
+  if [ "$BOOT_DRIVETRAIN" != "false" ]; then
+    while ! ip link show "$CAN_INTERFACE" 2>/dev/null | grep -q "<NOARP,UP,LOWER_UP[^>]*>"; do
+      echo "Waiting for $CAN_INTERFACE"
+      sleep 2
+    done
 
-  echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Base High"
-  zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-hi.json5" > /dev/null &
-
-  echo "[INFO - $(date +"%b %d %T")] Starting POE Cams"
-  #ros2 launch umrt-ros-poe-cam mobile_publisher.launch.py &
-
-  while ! ip link show "$INTERFACE" 2>/dev/null | grep -q "<NOARP,UP,LOWER_UP[^>]*>"; do
-    echo "waiting"
-    sleep 2
-  done
-
-  echo "[INFO - $(date +"%b %d %T")] Starting Drive Train"
-  ros2 launch launch rover.launch.py
+    echo "[INFO - $(date +"%b %d %T")] Starting Drive Train"
+    ros2 launch launch rover.launch.py &
+  fi
 
   echo "[INFO - $(date +"%b %d %T")] Rover Launch Complete Successfully"
   c_exit

@@ -12,6 +12,22 @@ services:
 #    gpus: all
     environment:
       - DISPLAY=${DISPLAY}
+
+      # Set Value to False to Disable Functionality      
+      - BOOT_CAM: true
+      - BOOT_DRIVETRAIN: true
+      
+      # Set Value to False to Disable Network on Boot
+      - BOOT_LO_NET: true
+      - BOOT_LO_F_HI_NET: true
+      - BOOT_HI_NET: true
+      - BOOT_HI_F_LO_NET: true
+      - BOOT_LOC_NET: true
+      - BOOT_ALL_NET: true
+      
+      # Select the can interface
+      - CAN_INTERFACE: "can1"
+      
 #    devices:
 #      - "/dev/video0:/dev/video0" # expose USB cam testing
     volumes:
