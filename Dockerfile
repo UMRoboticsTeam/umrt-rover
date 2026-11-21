@@ -10,6 +10,7 @@ ENV QT_X11_NO_MITSHM=1
 ENV ROUTE_POLICY=drop-default
 
 # These files are referenced in symlinks, so they also have to be copied.
+RUN mkdir -p /ws/src/ros2_j1939_babbler
 COPY ./version /ws
 COPY ./Messages.sym /ws
 
