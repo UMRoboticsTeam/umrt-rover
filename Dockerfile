@@ -33,6 +33,7 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
         python3-curtsies \
         python3-doxypypy \
         python3-pip \
+        ros-humble-ros-babel-fish \
 	ros-humble-depthai-bridge-v3 \
 	ros-humble-depthai-ros-msgs-v3 \
 	ros-humble-depthai-v3 \
