@@ -23,6 +23,7 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
     rm -f /etc/apt/sources.list.d/ros2.list \
     && apt-get update && apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-overwrite" \
         ffmpeg \
+        file \
 	iproute2 \
 	iputils-ping \
 	less \
@@ -64,9 +65,10 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
 # These files are referenced in symlinks, so they also have to be copied.
 RUN sudo pip3 install cantools
 RUN mkdir -p /ws/src/ros2_j1939_babbler
+
 COPY ./version /ws
 COPY ./Messages.sym /ws
-COPY ./src /ws/src/
+COPY src /ws/src/
 
 RUN git clone https://github.com/UMRoboticsTeam/ros2_j1939_babbler.git /ws/src/ros2_j1939_babbler \
     && git -C /ws/src/ros2_j1939_babbler checkout v0.2.4
