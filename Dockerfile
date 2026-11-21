@@ -9,6 +9,15 @@ ENV NVIDIA_DRIVER_CAPABILITIES=all
 ENV QT_X11_NO_MITSHM=1
 ENV ROUTE_POLICY=drop-default
 
+# These files are referenced in symlinks, so they also have to be copied.
+COPY ./version /ws
+COPY ./Messages.sym /ws
+
+RUN git clone https://github.com/UMRoboticsTeam/ros2_j1939_babbler.git /ws/src/ros2_j1939_babbler \
+    && git -C /ws/src/ros2_j1939_babbler checkout v0.2.4
+RUN cd /ws/src && ./build_scripts.sh
+RUN sudo rm -rf /ws
+
 RUN mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://download.eclipse.org/zenoh/debian-repo/zenoh-public-key | gpg --dearmor --yes --output /etc/apt/keyrings/zenoh-public-key.gpg \
     && echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/zenoh-public-key.gpg] https://download.eclipse.org/zenoh/debian-repo/ /" > /etc/apt/sources.list.d/zenoh.list \

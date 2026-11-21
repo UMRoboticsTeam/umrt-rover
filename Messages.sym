@@ -1,0 +1,325 @@
+FormatVersion=6.0 // Do not edit this line!
+Title="UMRT"
+IDMask=FFFF00h
+
+{ENUMS}
+Enum=Assigned_Source_Addresses(128="ROS Controller", 104="CAN-PPM Gateways", 105="CAN-PPM Gateways",
+  106="CAN-PPM Gateways", 107="CAN-PPM Gateways", 108="CAN-PPM Gateways", 109="CAN-PPM Gateways",
+  110="CAN-PPM Gateways", 111="CAN-PPM Gateways", 236="Embedded Controller", 96="Soil Sensor (ESP32)")
+Enum=Battery_Charge_State(0="Stationary", 1="Charging", 2="Discharging")
+Enum=Balance_State(0="Closed", 1="Open")
+
+{SENDRECEIVE}
+
+[Rover_Speed_Control]
+ID=00FFE980h
+Type=Extended
+Len=8
+Var=Left_Angular_Velocity unsigned 0,16 /u:rpm /f:0.125 /o:-4016 /min:0 /max:4015.875 /slot:494
+Var=Right_Angular_Velocity unsigned 16,16 /u:rpm /f:0.125 /o:-4016 /min:0 /max:4015.875 /slot:494 // slot:494
+Var=Message_Counter unsigned 48,8 /u:count /max:250 /slot:129
+Var=CRC unsigned 56,8 /u:statevalue /slot:93
+Var=Reserved raw 32,16
+
+[Servo_Control_0]
+ID=00EF6800h
+Type=Extended
+Len=8
+Var=Index unsigned 0,8 /u:index /max:250 /slot:129
+Var=Set_Angle unsigned 8,16 /u:% /f:0.0015625 /max:100.3984375
+Var=Message_Counter unsigned 48,8 /u:count /max:250 /slot:129
+Var=CRC unsigned 56,8 /u:statevalue /slot:93
+Var=Reserved raw 24,24
+
+[Servo_Control_1]
+ID=00EF6900h
+Type=Extended
+Len=8
+Var=Index unsigned 0,8 /u:index /max:250 /slot:129
+Var=Set_Angle unsigned 8,16 /u:% /f:0.0015625 /max:100.3984375
+Var=Message_Counter unsigned 48,8 /u:count /max:250 /slot:129
+Var=CRC unsigned 56,8 /u:statevalue /slot:93
+Var=Reserved raw 24,24
+
+[Servo_Control_2]
+ID=00EF6A00h
+Type=Extended
+Len=8
+Var=Index unsigned 0,8 /u:index /max:250 /slot:129
+Var=Set_Angle unsigned 8,16 /u:% /f:0.0015625 /max:100.3984375
+Var=Message_Counter unsigned 48,8 /u:count /max:250 /slot:129
+Var=CRC unsigned 56,8 /u:statevalue /slot:93
+Var=Reserved raw 24,24
+
+[Servo_Control_3]
+ID=00EF6B00h
+Type=Extended
+Len=8
+Var=Index unsigned 0,8 /u:index /max:250 /slot:129
+Var=Set_Angle unsigned 8,16 /u:% /f:0.0015625 /max:100.3984375
+Var=Message_Counter unsigned 48,8 /u:count /max:250 /slot:129
+Var=CRC unsigned 56,8 /u:statevalue /slot:93
+Var=Reserved raw 24,24
+
+[Servo_Control_4]
+ID=00EF6C00h
+Type=Extended
+Len=8
+Var=Index unsigned 0,8 /u:index /max:250 /slot:129
+Var=Set_Angle unsigned 8,16 /u:% /f:0.0015625 /max:100.3984375
+Var=Message_Counter unsigned 48,8 /u:count /max:250 /slot:129
+Var=CRC unsigned 56,8 /u:statevalue /slot:93
+Var=Reserved raw 24,24
+
+[Servo_Control_5]
+ID=00EF6D00h
+Type=Extended
+Len=8
+Var=Index unsigned 0,8 /u:index /max:250 /slot:129
+Var=Set_Angle unsigned 8,16 /u:% /f:0.0015625 /max:100.3984375
+Var=Message_Counter unsigned 48,8 /u:count /max:250 /slot:129
+Var=CRC unsigned 56,8 /u:statevalue /slot:93
+Var=Reserved raw 24,24
+
+[Servo_Control_6]
+ID=00EF6E00h
+Type=Extended
+Len=8
+Var=Index unsigned 0,8 /u:index /max:250 /slot:129
+Var=Set_Angle unsigned 8,16 /u:% /f:0.0015625 /max:100.3984375
+Var=Message_Counter unsigned 48,8 /u:count /max:250 /slot:129
+Var=CRC unsigned 56,8 /u:statevalue /slot:93
+Var=Reserved raw 24,24
+
+[Servo_Control_7]
+ID=00EF6F00h
+Type=Extended
+Len=8
+Var=Index unsigned 0,8 /u:index /max:250 /slot:129
+Var=Set_Angle unsigned 8,16 /u:% /f:0.0015625 /max:100.3984375
+Var=Message_Counter unsigned 48,8 /u:count /max:250 /slot:129
+Var=CRC unsigned 56,8 /u:statevalue /slot:93
+Var=Reserved raw 24,24
+
+[Rover_Speed_Feedback]
+ID=00FFEAECh
+Type=Extended
+Len=8
+Var=Left_Angular_Velocity unsigned 0,16 /u:rpm /f:0.125 /o:-4016 /min:0 /max:4015.875 /slot:494
+Var=Right_Angular_Velocity unsigned 16,16 /u:rpm /f:0.125 /o:-4016 /min:0 /max:4015.875 /slot:494 // slot:494
+Var=Left_Disagreement unsigned 32,8 /u:rpm /f:0.25 /o:-31.25 /min:0 /max:31.25 /slot:494
+Var=Right_Disagreement unsigned 40,8 /u:rpm /f:0.25 /o:-31.25 /min:0 /max:31.25 /slot:494
+Var=Message_Counter unsigned 48,8 /u:count /max:250 /slot:129
+Var=CRC unsigned 56,8 /u:statevalue /slot:93
+
+[BMS_SoC_Req]
+ID=00900140h
+Type=Extended
+Len=8
+Var=Reserved raw 0,64
+
+[BMS_SoC]
+ID=00904001h
+Type=Extended
+Len=8
+Var=Cumulative_Total_Voltage unsigned 0,16 /u:V /f:0.1
+Var=Gather_Total_Voltage unsigned 16,16 /u:V /f:0.1
+Var=Current unsigned 32,16 /u:A /f:0.1 /o:-3000 /max:3553.5
+Var=SoC unsigned 48,16 /u:% /f:0.1
+
+[BMS_Voltage_Req]
+ID=00910140h
+Type=Extended
+Len=8
+Var=Reserved raw 0,64
+
+[BMS_Voltage]
+ID=00914001h
+Type=Extended
+Len=8
+
+[BMS_Temp_Req]
+ID=00920140h
+Type=Extended
+Len=8
+Var=Reserved raw 0,64
+
+[BMS_FET_Status_Req]
+ID=00930140h
+Type=Extended
+Len=8
+Var=Reserved raw 0,64
+
+[BMS_Info_Req]
+ID=00940140h
+Type=Extended
+Len=8
+Var=Reserved raw 0,64
+
+[BMS_Cell_Volt_Req]
+ID=00950140h
+Type=Extended
+Len=8
+Var=Reserved raw 0,64
+
+[BMS_Balance_State_Req]
+ID=00970140h
+Type=Extended
+Len=8
+Var=Reserved raw 0,64
+
+[BMS_Cell_Temp_Req]
+ID=00960140h
+Type=Extended
+Len=8
+Var=Reserved raw 0,64
+
+[BMS_Faults]
+ID=00984001h
+Type=Extended
+Len=8
+Var=Cell_Overvoltage_Fault bit 0,1 /u:bool
+Var=Cell_Overvoltage_Critical_Fault bit 1,1 /u:bool
+Var=Cell_Undervoltage_Fault bit 2,1 /u:bool
+Var=Cell_Undervoltage_Critical_Fault bit 3,1 /u:bool
+Var=Pack_Overvoltage_Fault bit 4,1 /u:bool
+Var=Pack_Overvoltage_Critical_Fault bit 5,1 /u:bool
+Var=Pack_Undervoltage_Fault bit 6,1 /u:bool
+Var=Pack_Undervoltage_Critical_Fault bit 7,1 /u:bool
+Var=Charge_Over_Temp_Fault bit 8,1 /u:bool
+Var=Charge_Over_Temp_Critical_Fault bit 9,1 /u:bool
+Var=Charge_Under_Temp_Fault bit 10,1 /u:bool
+Var=Charge_Under_Temp_Critical_Fault bit 11,1 /u:bool
+Var=Dischg_Over_Temp_Fault bit 12,1 /u:bool
+Var=Dischg_Over_Temp_Critical_Fault bit 13,1 /u:bool
+Var=Dischg_Under_Temp_Fault bit 14,1 /u:bool
+Var=Dischg_Under_Temp_Critical_Fault bit 15,1 /u:bool
+Var=Charge_Over_Curr_Fault bit 16,1 /u:bool
+Var=Charge_Over_Curr_Critical_Fault bit 17,1 /u:bool
+Var=Dischg_Over_Curr_Fault bit 18,1 /u:bool
+Var=Dischg_Over_Curr_Critical_Fault bit 19,1 /u:bool
+Var=SoC_Over_Fault bit 20,1 /u:bool
+Var=SoC_Over_Critical_Fault bit 21,1 /u:bool
+Var=SoC_Under_Fault bit 22,1 /u:bool
+Var=SoC_Under_Critical_Fault bit 23,1 /u:bool
+Var=Volt_Delta_Fault bit 24,1 /u:bool
+Var=Volt_Delta_Critical_Fault bit 25,1 /u:bool
+Var=Temp_Delta_Fault bit 26,1 /u:bool
+Var=Temp_Delta_Critical_Fault bit 27,1 /u:bool
+Var=Charge_FET_Over_Temp_Fault bit 32,1 /u:bool
+Var=Dischg_FET_Over_Temp_Fault bit 33,1 /u:bool
+Var=Charge_FET_Unknown_Temp_Fault bit 34,1 /u:bool
+Var=Dischg_FET_Unknown_Tmp_Fault bit 35,1 /u:bool
+Var=Charge_FET_Adhesion_Fault bit 36,1 /u:bool
+Var=Dischg_FET_Adhesion_Fault bit 37,1 /u:bool
+Var=Charge_FET_Open_Circ_Fault bit 38,1 /u:bool
+Var=Dischg_FET_Open_Circ_Fault_Copy bit 39,1 /u:bool
+Var=AFE_Fault bit 40,1 /u:bool // Active front end
+Var=Cell_Voltage_Sensor_Fault bit 41,1 /u:bool
+Var=Cell_Temp_Sensor_Fault bit 42,1 /u:bool
+Var=EEPROM_Fault bit 43,1 /u:bool
+Var=RTC_Fault bit 44,1 /u:bool
+Var=Comms_Fault bit 46,1 /u:bool
+Var=Precharge_Fault bit 45,1 /u:bool
+Var=Internal_Comms_Fault bit 47,1 /u:bool
+Var=Current_Sensor_Fault bit 48,1 /u:bool
+Var=Pack_Voltage_Sensor_Fault bit 49,1 /u:bool
+Var=Short_Circuit_Protection_Fault bit 50,1 /u:bool
+Var=Charging_Forbidden_Fault bit 51,1 /u:bool
+Var=Fault_Code unsigned 56,8
+Var=Reserved_2 unsigned 52,4
+Var=Reserved unsigned 28,4
+
+[BMS_Temp]
+ID=00924001h
+Type=Extended
+Len=8
+Var=Max_Temp unsigned 0,8 /u:degC /o:-40 /min:0 // Highest current cell temperature
+Var=Max_Temp_Id unsigned 8,8 /u:index // Index of cell which has highest temperature
+Var=Min_Temp unsigned 16,8 /u:degC /o:-40 /min:0 // Lowest current cell temperature
+Var=Min_Temp_Id unsigned 24,8 /u:index // Index of cell which has lowest temperature
+
+[BMS_FET_Status]
+ID=00934001h
+Type=Extended
+Len=8
+Var=BMS_State Battery_Charge_State 0,8
+Var=Charging_FET_On unsigned 8,8 /u:bool
+Var=Discharging_FET_On unsigned 16,8 /u:bool
+Var=Cycles unsigned 24,8 /u:count
+Var=Remaining_Capacity unsigned 32,32 /u:Ah /f:0.001 /max:255
+
+[BMS_Info]
+ID=00944001h
+Type=Extended
+Len=8
+Var=Cell_Count unsigned 0,8 /u:count
+Var=Temp_Sensor_Count unsigned 8,8 /u:count
+Var=Charger_Status unsigned 16,8 /u:bool
+Var=Load_Status unsigned 24,8 /u:bool
+Var=DI_1 bit 32,1 /u:bool
+Var=DI_2 bit 33,1 /u:bool
+Var=DI_3 bit 34,1 /u:bool
+Var=DI_4 bit 35,1 /u:bool
+Var=DO_1 bit 36,1 /u:bool
+Var=DO_2 bit 37,1 /u:bool
+Var=DO_3 bit 38,1 /u:bool
+Var=DO_4 bit 39,1 /u:bool
+Var=Reserved raw 40,24
+
+[BMS_Cell_Volt]
+ID=00954001h
+Type=Extended
+Len=8
+Var=Frame_Index unsigned 0,8 /u:index /max:254
+Var=Voltage_N0 unsigned 8,16 /u:V /f:0.001 // Voltage of cell with index Frame_Index * 3 + 0
+Var=Voltage_N1 unsigned 24,16 /u:V /f:0.001 // Voltage of cell with index Frame_Index * 3 + 1
+Var=Voltage_N2 unsigned 40,16 /u:V /f:0.001 // Voltage of cell with index Frame_Index * 3 + 2
+Var=Reserved raw 56,8
+
+[BMS_Cell_Temp]
+ID=00964001h
+Type=Extended
+Len=8
+Var=Frame_Index unsigned 0,8 /u:index /max:254
+Var=Temp_N0 unsigned 8,8 /u:degC // Temperature of cell with index Frame_Index * 7 + 0
+Var=Temp_N1 unsigned 16,8 /u:degC // Temperature of cell with index Frame_Index * 7 + 1
+Var=Temp_N2 unsigned 24,8 /u:degC // Temperature of cell with index Frame_Index * 7 + 2
+Var=Temp_N3 unsigned 32,8 /u:degC // Temperature of cell with index Frame_Index * 7 + 3
+Var=Temp_N4 unsigned 40,8 /u:degC // Temperature of cell with index Frame_Index * 7 + 4
+Var=Temp_N5 unsigned 48,8 /u:degC // Temperature of cell with index Frame_Index * 7 + 5
+Var=Temp_N6 unsigned 56,8 /u:degC // Temperature of cell with index Frame_Index * 7 + 6
+
+[BMS_Balance_State]
+ID=00974001h
+Type=Extended
+Len=8
+Var=Cell_Balance_0 bit 0,1 /u:bool /e:Balance_State
+Var=Cell_Balance_1 bit 1,1 /u:bool /e:Balance_State
+Var=Cell_Balance_2 bit 2,1 /u:bool /e:Balance_State
+Var=Cell_Balance_3 bit 3,1 /u:bool /e:Balance_State
+Var=Cell_Balance_4 bit 4,1 /u:bool /e:Balance_State
+Var=Cell_Balance_5 bit 5,1 /u:bool /e:Balance_State
+Var=Reserved raw 48,16
+
+[BMS_Faults_Req]
+ID=00980140h
+Type=Extended
+Len=8
+Var=Reserved raw 0,64
+
+[Soil_Sensor]
+ID=18FFEB00h
+Type=Extended
+Len=8
+Var=Soil_Temperature signed 0,16 /u:degC /f:0.1 /min:-40 /max:85
+Var=Soil_Moisture signed 16,16 /u:% /f:0.1 /min:0 /max:100
+Var=Soil_EC signed 32,16 /u:uS/cm /f:0.1 /min:0 /max:3276.7
+Var=Soil_PH signed 48,16 /u:pH /f:0.1 /min:0 /max:14
+
+[Front_Headlight_Command]
+ID=00FFEC80h
+Type=Extended
+Len=8
+Var=Front_Headlight_State unsigned 0,8 /u:statevalue /slot:120
+Var=Reserved raw 8,56
