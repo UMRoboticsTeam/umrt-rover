@@ -13,6 +13,7 @@ ENV ROUTE_POLICY=drop-default
 RUN mkdir -p /ws/src/ros2_j1939_babbler
 COPY ./version /ws
 COPY ./Messages.sym /ws
+COPY ./src /ws/src/
 
 RUN git clone https://github.com/UMRoboticsTeam/ros2_j1939_babbler.git /ws/src/ros2_j1939_babbler \
     && git -C /ws/src/ros2_j1939_babbler checkout v0.2.4
