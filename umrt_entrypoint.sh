@@ -2,6 +2,7 @@
 RED_TXT="\033[31m"
 RESET_TXT="\033[0m"
 
+
 ################################
 # require_file
 #   Looks to see if the required file is found on the device
