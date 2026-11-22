@@ -1,3 +1,32 @@
+# --- Stage 1: Babbler Builder ---
+FROM ros:humble-ros-base AS builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-overwrite" \
+    file \
+    libboost-all-dev \
+    python-is-python3 \
+    python3-bloom \
+    python3-curtsies \
+    python3-doxypypy \
+    python3-pip \
+    ros-humble-can-msgs \
+    ros-humble-ros-babel-fish
+   
+# These files are referenced in symlinks, so they also have to be copied.
+RUN sudo pip3 install cantools
+RUN mkdir -p /ws/src/ros2_j1939_babbler
+
+# Build Babbler
+COPY ./version /ws
+COPY ./Messages.sym /ws
+COPY src /ws/src/
+
+RUN git clone https://github.com/UMRoboticsTeam/ros2_j1939_babbler.git /ws/src/ros2_j1939_babbler \
+    && git -C /ws/src/ros2_j1939_babbler checkout v0.2.4
+RUN cd /ws/src && ./build_scripts.sh
+RUN sudo rm -rf /ws
+
+# --- Stage 2: Final Image ---
 FROM ros:humble-ros-base
 
 ENV ROS_DOMAIN_ID=2
@@ -8,6 +37,12 @@ ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=all
 ENV QT_X11_NO_MITSHM=1
 ENV ROUTE_POLICY=drop-default
+
+# Copying in babbler into build
+COPY --from=builder /ws/build-output/share /opt/ros/humble/share
+COPY --from=builder /ws/build-output/lib /opt/ros/humble/lib
+COPY --from=builder /ws/build-output/include /opt/ros/humble/include
+COPY --from=builder  /ws/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
 
 RUN mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://download.eclipse.org/zenoh/debian-repo/zenoh-public-key | gpg --dearmor --yes --output /etc/apt/keyrings/zenoh-public-key.gpg \
@@ -23,17 +58,10 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
     rm -f /etc/apt/sources.list.d/ros2.list \
     && apt-get update && apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-overwrite" \
         ffmpeg \
-        file \
 	iproute2 \
 	iputils-ping \
 	less \
 	nano \
-	python-is-python3 \
-        python3-bloom \
-        python3-curtsies \
-        python3-doxypypy \
-        python3-pip \
-        ros-humble-ros-babel-fish \
 	ros-humble-depthai-bridge-v3 \
 	ros-humble-depthai-ros-msgs-v3 \
 	ros-humble-depthai-v3 \
@@ -63,19 +91,7 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
     && rm -rf /var/lib/apt/lists/* \
     && rm -f /etc/apt/sources.list.d/umrt_source.list
 
-# These files are referenced in symlinks, so they also have to be copied.
-RUN sudo pip3 install cantools
-RUN mkdir -p /ws/src/ros2_j1939_babbler
-
-COPY ./version /ws
-COPY ./Messages.sym /ws
-COPY src /ws/src/
-
-RUN git clone https://github.com/UMRoboticsTeam/ros2_j1939_babbler.git /ws/src/ros2_j1939_babbler \
-    && git -C /ws/src/ros2_j1939_babbler checkout v0.2.4
-RUN cd /ws/src && ./build_scripts.sh
-RUN sudo rm -rf /ws
-
+# Copying in Launch Files and Entrypoint
 COPY umrt_entrypoint.sh /umrt_entrypoint.sh
 COPY ./launch /opt/ros/humble/share/launch
 RUN chmod +x /umrt_entrypoint.sh
