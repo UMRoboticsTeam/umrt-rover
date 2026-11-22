@@ -85,7 +85,6 @@ COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/local/lib/pyt
 COPY --from=armfirmwarebuilder /ws/src/arm-lib-firmware/build-output/share /opt/ros/humble/share
 COPY --from=armfirmwarebuilder /ws/src/arm-lib-firmware/build-output/lib /opt/ros/humble/lib
 COPY --from=armfirmwarebuilder /ws/src/arm-lib-firmware/build-output/include /opt/ros/humble/include
-COPY --from=armfirmwarebuilder /ws/src//arm-lib-firmware/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
 
 # Public key has been downloaded using
 #   curl -fsSL https://download.eclipse.org/zenoh/debian-repo/zenoh-public-key | gpg --dearmor --yes --output ./files/zenoh-public-key.gpg
