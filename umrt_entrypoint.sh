@@ -58,14 +58,14 @@ main() {
 
   if  [ "$BOOT_LO_NET" != "false" ]; then
     echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover Low Network"
-    require_file "${BRIDGE_WORKSPACE}/config/rover-lo.json"
-    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-lo.json" > /dev/null &
+    require_file "${BRIDGE_WORKSPACE}/config/rover_lo.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover_lo.json" > /dev/null &
   fi
 
   if [ "$BOOT_HI_NET" != "false" ]; then
     echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover High Network"
-    require_file "${BRIDGE_WORKSPACE}/config/rover-hi.json"
-    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-hi.json" > /dev/null &
+    require_file "${BRIDGE_WORKSPACE}/config/rover_hi.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover_hi.json" > /dev/null &
   fi
   
   if [ "$BOOT_HI_F_LO_NET" != "false" ]; then
@@ -76,20 +76,20 @@ main() {
   
   if [ "$BOOT_LO_F_HI_NET" != "false" ]; then
     echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover Low Fail High Network"
-    require_file "${BRIDGE_WORKSPACE}/config/rover-lo_f_hi.json"
-    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-lo_f_hi.json" > /dev/null &
+    require_file "${BRIDGE_WORKSPACE}/config/rover_lo_f_hi.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover_lo_f_hi.json" > /dev/null &
   fi
   
   if [ "$BOOT_LOC_NET" != "false" ]; then
     echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover Local Network"
-    require_file "${BRIDGE_WORKSPACE}/config/rover-loc.json"
-    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-loc.json" > /dev/null &
+    require_file "${BRIDGE_WORKSPACE}/config/rover_loc.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover_loc.json" > /dev/null &
   fi
   
   if [ "$BOOT_ALL_NET" != "false" ]; then
     echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover All Network"
-    require_file "${BRIDGE_WORKSPACE}/config/rover-all.json"
-    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-all.json" > /dev/null &
+    require_file "${BRIDGE_WORKSPACE}/config/rover_all.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover_all.json" > /dev/null &
   fi
   
   if [ "$BOOT_CAM" != "false" ]; then
