@@ -36,7 +36,9 @@ FROM ros:humble-ros-base AS armfirmwarebuilder
 RUN echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/umrt.asc] https://raw.githubusercontent.com/UMRoboticsTeam/umrt-apt-repo/main/ humble main" > /etc/apt/sources.list.d/umrt_source.list \
     && echo '#!/bin/sh\nexit 0' > /usr/local/bin/systemctl && chmod +x /usr/local/bin/systemctl
     
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
+    --mount=type=secret,id=apt_pubkey,target=/etc/apt/keyrings/umrt.asc,mode=0644 \
+    && apt-get update && apt-get install -y --no-install-recommends \
     ros-humble-hardware-interface \
     ros-humble-pluginlib \
     ros-humble-realtime-tools \
