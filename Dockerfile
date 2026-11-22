@@ -45,6 +45,7 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
     ros-humble-hardware-interface \
     ros-humble-pluginlib \
     ros-humble-realtime-tools \
+    ros-humble-ros2-socketcan \
     umrt-arm-firmware-lib
     
 COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
