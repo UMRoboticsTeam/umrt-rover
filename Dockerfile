@@ -111,7 +111,7 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
 	nano \
 	ros-humble-depthai-bridge-v3 \
 	ros-humble-depthai-ros-msgs-v3 \
-	ros-humble-depthai-v3=3.10.0-1 \
+	ros-humble-depthai-v3=3.10.0-1* \
 	ros-humble-ffmpeg-image-transport \
 	ros-humble-ffmpeg-image-transport-msgs \
 	ros-humble-foxglove-compressed-video-transport \
