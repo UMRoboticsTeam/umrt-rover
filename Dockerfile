@@ -1,7 +1,7 @@
 # --- Stage 1: Babbler Builder ---
-FROM ros:humble-ros-base AS builder
+FROM ros:humble-ros-base AS babblerBuilder
 
-RUN apt-get update && apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-overwrite" \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     file \
     libboost-all-dev \
     python-is-python3 \
@@ -25,7 +25,28 @@ RUN git clone https://github.com/UMRoboticsTeam/ros2_j1939_babbler.git /ws/src/r
     && git -C /ws/src/ros2_j1939_babbler checkout v0.2.4
 RUN cd /ws/src && ./build_scripts.sh
 
-# --- Stage 2: Final Image ---
+# --- Stage 1: Babbler Builder ---
+FROM ros:humble-ros-base AS armFirmwareBuilder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-humble-hardware-interface \
+    ros-humble-pluginlib \
+    ros-humble-realtime-tools
+    
+COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
+COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/lib /opt/ros/humble/lib
+COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/include /opt/ros/humble/include
+COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
+
+RUN mkdir -p /ws/src/arm-lib-firmware
+RUN git clone https://github.com/UMRoboticsTeam/umrt-arm-ros-firmware.git /ws/src/arm-lib-firmware \
+    && git -C /ws/src/arm-lib-firmware checkout wheel_controller
+
+RUN cd /ws/src/arm-lib-firmware && \
+    source /opt/ros/humble/setup.bash && \
+    colcon build --event-handlers console_direct+ --merge-install --install-base ./build-output
+
+# --- Stage 3: Final Image ---
 FROM ros:humble-ros-base
 
 ENV ROS_DOMAIN_ID=2
@@ -38,24 +59,35 @@ ENV QT_X11_NO_MITSHM=1
 ENV ROUTE_POLICY=drop-default
 
 # Copying in babbler into build
-COPY --from=builder /ws/src/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
-COPY --from=builder /ws/src/ros2_j1939_babbler/build-output/lib /opt/ros/humble/lib
-COPY --from=builder /ws/src/ros2_j1939_babbler/build-output/include /opt/ros/humble/include
-COPY --from=builder /ws/src/ros2_j1939_babbler/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
+COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
+COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/lib /opt/ros/humble/lib
+COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/include /opt/ros/humble/include
+COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
 
+# Copying in from arm-lib into build
+COPY --from=armFirmwareBuilder /ws/src/arm-lib-firmware/build-output/share /opt/ros/humble/share
+COPY --from=armFirmwareBuilder /ws/src/arm-lib-firmware/build-output/lib /opt/ros/humble/lib
+COPY --from=armFirmwareBuilder /ws/src/arm-lib-firmware/build-output/include /opt/ros/humble/include
+COPY --from=armFirmwareBuilder /ws/src//arm-lib-firmware/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
+
+# Public key has been downloaded using
+#   curl -fsSL https://download.eclipse.org/zenoh/debian-repo/zenoh-public-key | gpg --dearmor --yes --output ./files/zenoh-public-key.gpg
+# on October 31st, 2026
+COPY ./files/zenoh-public-key.gpg /etc/apt/keyrings/zenoh-public-key.gpg
+
+# Copy APT configuration files
+COPY ./files/99parallel /etc/apt/apt.conf.d/99parallel
+
+# Installing Packages
 RUN mkdir -p /etc/apt/keyrings \
-    && curl -fsSL https://download.eclipse.org/zenoh/debian-repo/zenoh-public-key | gpg --dearmor --yes --output /etc/apt/keyrings/zenoh-public-key.gpg \
     && echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/zenoh-public-key.gpg] https://download.eclipse.org/zenoh/debian-repo/ /" > /etc/apt/sources.list.d/zenoh.list \
     && echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/umrt.asc] https://raw.githubusercontent.com/UMRoboticsTeam/umrt-apt-repo/main/ humble main" > /etc/apt/sources.list.d/umrt_source.list \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main" > /etc/apt/sources.list.d/ros2.list \
-    && echo '#!/bin/sh\nexit 0' > /usr/local/bin/systemctl && chmod +x /usr/local/bin/systemctl \
-    && echo 'Acquire::Queue-Mode "host";' > /etc/apt/apt.conf.d/99parallel \
-    && echo 'Acquire::http::Pipeline-Depth "5";' >> /etc/apt/apt.conf.d/99parallel
-
+    && echo '#!/bin/sh\nexit 0' > /usr/local/bin/systemctl && chmod +x /usr/local/bin/systemctl
+    
 RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
     --mount=type=secret,id=apt_pubkey,target=/etc/apt/keyrings/umrt.asc,mode=0644 \
     rm -f /etc/apt/sources.list.d/ros2.list \
-    && apt-get update && apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-overwrite" \
+    && apt-get update && apt-get install -y --no-install-recommends \
         ffmpeg \
 	iproute2 \
 	iputils-ping \
@@ -73,9 +105,9 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
 	ros-humble-joy \
 	ros-humble-joy-teleop \
 	ros-humble-network-bridge \
+	ros-humble-ros-babel-fish \
 	ros-humble-rviz2 \
 	ros-humble-teleop-twist-joy \
-	ros-humble-umrt-arm-ros-firmware \
 	ros-humble-umrt-drivetrain-ros \
 	ros-humble-umrt-emb-imu-ros \
 	ros-humble-umrt-localization-ros \

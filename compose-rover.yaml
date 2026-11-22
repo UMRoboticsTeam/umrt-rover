@@ -11,19 +11,19 @@ services:
 #    runtime: nvidia
 #    gpus: all
     environment:
-      #- DISPLAY=${DISPLAY}
+      DISPLAY: "${DISPLAY}"
 
       # Set Value to False to Disable Functionality      
-      BOOT_CAM: true
+      BOOT_CAM: false
       BOOT_DRIVETRAIN: true
       
       # Set Value to False to Disable Network on Boot
-      BOOT_LO_NET: true
-      BOOT_LO_F_HI_NET: true
-      BOOT_HI_NET: true
-      BOOT_HI_F_LO_NET: true
-      BOOT_LOC_NET: true
-      BOOT_ALL_NET: true
+      BOOT_LO_NET: false
+      BOOT_LO_F_HI_NET: false
+      BOOT_HI_NET: false
+      BOOT_HI_F_LO_NET: false
+      BOOT_LOC_NET: false
+      BOOT_ALL_NET: false
       
       # Select the can interface
       CAN_INTERFACE: "can1"
@@ -33,6 +33,12 @@ services:
     volumes:
       - "${RES_CONFIG_DIR:-./config}:/${BRIDGE_WORKSPACE:-/workspace/umrt-zenoh-bridge}/config"
       - "./tmp/mobile_publisher.launch.py:/opt/ros/humble/share/umrt-ros-poe-cam/launch/mobile_publisher.launch.py"
+      - "./tmp/launch:/opt/ros/humble/share/umrt-arm-ros-firmware/launch"
+      - "./tmp/ros2_control:/opt/ros/humble/share/umrt-arm-ros-firmware/ros2_control"
+      - "./tmp/ros2_control_demo_description:/opt/ros/humble/share/umrt-arm-ros-firmware/ros2_control_demo_description"
+      - "./tmp/urdf:/opt/ros/humble/share/umrt-arm-ros-firmware/urdf"
+      - "./tmp/config:/opt/ros/humble/share/umrt-arm-ros-firmware/config"
+      - "./tmp/umrt-arm-ros-firmware.xml:/opt/ros/humble/share/umrt-arm-ros-firmware/umrt-arm-ros-firmware.xml"
     networks:
       bridge_lo:
         ipv4_address: 10.0.10.59

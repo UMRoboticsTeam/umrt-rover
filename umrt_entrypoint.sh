@@ -70,8 +70,8 @@ main() {
   
   if [ "$BOOT_HI_F_LO_NET" != "false" ]; then
     echo "[INFO - $(date +"%b %d %T")] Launching Zenoh Rover High Fail Low Network"
-    require_file "${BRIDGE_WORKSPACE}/config/rover-hi_f_lo.json"
-    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover-hi_f_lo.json" > /dev/null &
+    require_file "${BRIDGE_WORKSPACE}/config/rover_hi_f_lo.json"
+    zenoh-bridge-ros2dds -c "${BRIDGE_WORKSPACE}/config/rover_hi_f_lo.json" > /dev/null &
   fi
   
   if [ "$BOOT_LO_F_HI_NET" != "false" ]; then
@@ -99,7 +99,7 @@ main() {
 
   if [ "$BOOT_DRIVETRAIN" != "false" ]; then
     while ! ip link show "$CAN_INTERFACE" 2>/dev/null | grep -q "<NOARP,UP,LOWER_UP[^>]*>"; do
-      echo "Waiting for $CAN_INTERFACE"
+      echo "[INFO - $(date +"%b %d %T")] Waiting for $CAN_INTERFACE"
       sleep 2
     done
 
