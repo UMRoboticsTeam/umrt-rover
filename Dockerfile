@@ -39,10 +39,10 @@ ENV QT_X11_NO_MITSHM=1
 ENV ROUTE_POLICY=drop-default
 
 # Copying in babbler into build
-COPY --from=builder /ws/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
-COPY --from=builder /ws/ros2_j1939_babbler/build-output/lib /opt/ros/humble/lib
-COPY --from=builder /ws/ros2_j1939_babbler/build-output/include /opt/ros/humble/include
-COPY --from=builder /ws/ros2_j1939_babbler/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
+COPY --from=builder /ws/src/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
+COPY --from=builder /ws/src/ros2_j1939_babbler/build-output/lib /opt/ros/humble/lib
+COPY --from=builder /ws/src/ros2_j1939_babbler/build-output/include /opt/ros/humble/include
+COPY --from=builder /ws/src/ros2_j1939_babbler/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
 
 RUN mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://download.eclipse.org/zenoh/debian-repo/zenoh-public-key | gpg --dearmor --yes --output /etc/apt/keyrings/zenoh-public-key.gpg \
