@@ -41,6 +41,7 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
     apt-get update && apt-get install -y --no-install-recommends \
     file \
     libboost-all-dev \
+    openframeworksarduino=0.0.3 \
     ros-humble-hardware-interface \
     ros-humble-pluginlib \
     ros-humble-realtime-tools \
