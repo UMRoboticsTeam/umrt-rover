@@ -1,6 +1,9 @@
 # --- Stage 1: Babbler Builder ---
 FROM ros:humble-ros-base AS babblerbuilder
 
+# Installing Packages
+RUN echo '#!/bin/sh\nexit 0' > /usr/local/bin/systemctl && chmod +x /usr/local/bin/systemctl
+    
 RUN apt-get update && apt-get install -y --no-install-recommends \
     file \
     libboost-all-dev \
@@ -25,13 +28,19 @@ RUN git clone https://github.com/UMRoboticsTeam/ros2_j1939_babbler.git /ws/src/r
     && git -C /ws/src/ros2_j1939_babbler checkout v0.2.4
 RUN cd /ws/src && ./build_scripts.sh
 
-# --- Stage 1: Babbler Builder ---
+# --- Stage 2: Arm Firmware Builder ---
+# Note this is to be removed once arm firmware is back up to date.
 FROM ros:humble-ros-base AS armfirmwarebuilder
 
+# Installing Packages
+RUN echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/umrt.asc] https://raw.githubusercontent.com/UMRoboticsTeam/umrt-apt-repo/main/ humble main" > /etc/apt/sources.list.d/umrt_source.list \
+    && echo '#!/bin/sh\nexit 0' > /usr/local/bin/systemctl && chmod +x /usr/local/bin/systemctl
+    
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-humble-hardware-interface \
     ros-humble-pluginlib \
-    ros-humble-realtime-tools
+    ros-humble-realtime-tools \
+    umrt-arm-firmware-lib
     
 COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
 COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/lib /opt/ros/humble/lib
@@ -81,8 +90,7 @@ COPY ./files/zenoh-public-key.gpg /etc/apt/keyrings/zenoh-public-key.gpg
 COPY ./files/99parallel /etc/apt/apt.conf.d/99parallel
 
 # Installing Packages
-RUN mkdir -p /etc/apt/keyrings \
-    && echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/zenoh-public-key.gpg] https://download.eclipse.org/zenoh/debian-repo/ /" > /etc/apt/sources.list.d/zenoh.list \
+RUN echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/zenoh-public-key.gpg] https://download.eclipse.org/zenoh/debian-repo/ /" > /etc/apt/sources.list.d/zenoh.list \
     && echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/umrt.asc] https://raw.githubusercontent.com/UMRoboticsTeam/umrt-apt-repo/main/ humble main" > /etc/apt/sources.list.d/umrt_source.list \
     && echo '#!/bin/sh\nexit 0' > /usr/local/bin/systemctl && chmod +x /usr/local/bin/systemctl
     
