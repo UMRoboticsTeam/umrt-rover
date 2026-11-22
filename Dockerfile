@@ -1,5 +1,5 @@
 # --- Stage 1: Babbler Builder ---
-FROM ros:humble-ros-base AS babblerBuilder
+FROM ros:humble-ros-base AS babblerbuilder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     file \
@@ -26,17 +26,19 @@ RUN git clone https://github.com/UMRoboticsTeam/ros2_j1939_babbler.git /ws/src/r
 RUN cd /ws/src && ./build_scripts.sh
 
 # --- Stage 1: Babbler Builder ---
-FROM ros:humble-ros-base AS armFirmwareBuilder
+FROM ros:humble-ros-base AS armfirmwarebuilder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-humble-hardware-interface \
     ros-humble-pluginlib \
     ros-humble-realtime-tools
     
-COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
-COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/lib /opt/ros/humble/lib
-COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/include /opt/ros/humble/include
-COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
+COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
+COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/lib /opt/ros/humble/lib
+COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/include /opt/ros/humble/include
+COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
+
+SHELL ["/bin/bash", "-c"]
 
 RUN mkdir -p /ws/src/arm-lib-firmware
 RUN git clone https://github.com/UMRoboticsTeam/umrt-arm-ros-firmware.git /ws/src/arm-lib-firmware \
@@ -59,16 +61,16 @@ ENV QT_X11_NO_MITSHM=1
 ENV ROUTE_POLICY=drop-default
 
 # Copying in babbler into build
-COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
-COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/lib /opt/ros/humble/lib
-COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/include /opt/ros/humble/include
-COPY --from=babblerBuilder /ws/src/ros2_j1939_babbler/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
+COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/share /opt/ros/humble/share
+COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/lib /opt/ros/humble/lib
+COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/include /opt/ros/humble/include
+COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
 
 # Copying in from arm-lib into build
-COPY --from=armFirmwareBuilder /ws/src/arm-lib-firmware/build-output/share /opt/ros/humble/share
-COPY --from=armFirmwareBuilder /ws/src/arm-lib-firmware/build-output/lib /opt/ros/humble/lib
-COPY --from=armFirmwareBuilder /ws/src/arm-lib-firmware/build-output/include /opt/ros/humble/include
-COPY --from=armFirmwareBuilder /ws/src//arm-lib-firmware/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
+COPY --from=armfirmwarebuilder /ws/src/arm-lib-firmware/build-output/share /opt/ros/humble/share
+COPY --from=armfirmwarebuilder /ws/src/arm-lib-firmware/build-output/lib /opt/ros/humble/lib
+COPY --from=armfirmwarebuilder /ws/src/arm-lib-firmware/build-output/include /opt/ros/humble/include
+COPY --from=armfirmwarebuilder /ws/src//arm-lib-firmware/build-output/local/lib/python3.10/dist-packages /opt/ros/humble/local/lib/python3.10/dist-packages
 
 # Public key has been downloaded using
 #   curl -fsSL https://download.eclipse.org/zenoh/debian-repo/zenoh-public-key | gpg --dearmor --yes --output ./files/zenoh-public-key.gpg
