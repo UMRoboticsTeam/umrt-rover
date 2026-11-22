@@ -63,6 +63,7 @@ RUN cd /ws/src/arm-lib-firmware && \
     source /opt/ros/humble/setup.bash && \
     colcon build --event-handlers console_direct+ --merge-install --install-base ./build-output
 
+
 # --- Stage 3: Final Image ---
 FROM ros:humble-ros-base
 
