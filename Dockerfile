@@ -121,7 +121,6 @@ COPY --from=armfirmwarebuilder /ws/src/arm-lib-firmware/build-output/include /op
 # Copying in from poe-cam into build
 COPY --from=cambuilder /ws/src/poe-cam/build-output/share /opt/ros/humble/share
 COPY --from=cambuilder /ws/src/poe-cam/build-output/lib /opt/ros/humble/lib
-COPY --from=cambuilder /ws/src/poe-cam/build-output/include /opt/ros/humble/include
 
 # Public key has been downloaded using
 #   curl -fsSL https://download.eclipse.org/zenoh/debian-repo/zenoh-public-key | gpg --dearmor --yes --output ./files/zenoh-public-key.gpg
@@ -164,7 +163,6 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
 	ros-humble-umrt-emb-imu-ros \
 	ros-humble-umrt-localization-ros \
 	ros-humble-umrt-project-perry-description \
-	ros-humble-umrt-ros-poe-cam \
 	ros-humble-umrt-serial-cam-ros \
 	ros-humble-usb-cam \
 	ros-humble-vision-msgs \
