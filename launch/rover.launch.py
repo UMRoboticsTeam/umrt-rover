@@ -147,7 +147,7 @@ def generate_launch_description():
         static_bridge_node,
         ros2_socket_launch,
         drivetrain_launch,
-        #localization_launch
+        localization_launch
     ]
 
     return LaunchDescription(rover)
