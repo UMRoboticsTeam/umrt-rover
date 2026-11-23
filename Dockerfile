@@ -147,6 +147,7 @@ RUN --mount=type=secret,id=apt_auth_conf,target=/etc/apt/auth.conf.d/umrt.conf \
 	ros-humble-depthai-bridge-v3 \
 	ros-humble-depthai-ros-msgs-v3 \
 	ros-humble-depthai-descriptions-v3 \
+	ros-humble-depthai-descriptions \
 	ros-humble-depthai-v3 \
 	ros-humble-ffmpeg-image-transport \
 	ros-humble-ffmpeg-image-transport-msgs \
