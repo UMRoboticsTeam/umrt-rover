@@ -1,3 +1,34 @@
+# --- Stage 0: Poe Cam Builder ---
+FROM ros:humble-ros-base AS cambuilder
+RUN echo '#!/bin/sh\nexit 0' > /usr/local/bin/systemctl && chmod +x /usr/local/bin/systemctl
+    
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    file \
+    libboost-all-dev \
+    ros-humble-depthai-v3 \
+    ros-humble-depthai-ros-msgs-v3 \
+    ros-humble-depthai-bridge-v3 \
+    ros-humble-rclcpp \
+    ros-humble-rclcpp-lifecycle \
+    ros-humble-camera-info-manager \
+    ros-humble-cv-bridge \
+    ros-humble-foxglove-msgs \
+    ros-humble-sensor-msgs \
+    ros-humble-stereo-msgs \
+    ros-humble-std-msgs \
+    ros-humble-vision-msgs \
+    ros-humble-foxglove-compressed-video-transport \
+    ros-humble-image-transport
+
+SHELL ["/bin/bash", "-c"]
+
+RUN mkdir -p /ws/src/poe-cam
+RUN git clone https://github.com/UMRoboticsTeam/umrt-ros-poe-cam.git /ws/src/poe-cam \
+
+RUN cd /ws/src/poe-cam && \
+    source /opt/ros/humble/setup.bash && \
+    colcon build --event-handlers console_direct+ --merge-install --install-base ./build-output
+
 # --- Stage 1: Babbler Builder ---
 FROM ros:humble-ros-base AS babblerbuilder
 
@@ -86,6 +117,11 @@ COPY --from=babblerbuilder /ws/src/ros2_j1939_babbler/build-output/local/lib/pyt
 COPY --from=armfirmwarebuilder /ws/src/arm-lib-firmware/build-output/share /opt/ros/humble/share
 COPY --from=armfirmwarebuilder /ws/src/arm-lib-firmware/build-output/lib /opt/ros/humble/lib
 COPY --from=armfirmwarebuilder /ws/src/arm-lib-firmware/build-output/include /opt/ros/humble/include
+
+# Copying in from poe-cam into build
+COPY --from=cambuilder /ws/src/poe-cam/build-output/share /opt/ros/humble/share
+COPY --from=cambuilder /ws/src/poe-cam/build-output/lib /opt/ros/humble/lib
+COPY --from=cambuilder /ws/src/poe-cam/build-output/include /opt/ros/humble/include
 
 # Public key has been downloaded using
 #   curl -fsSL https://download.eclipse.org/zenoh/debian-repo/zenoh-public-key | gpg --dearmor --yes --output ./files/zenoh-public-key.gpg
