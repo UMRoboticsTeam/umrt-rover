@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 SHELL ["/bin/bash", "-c"]
 
 RUN mkdir -p /ws/src/poe-cam
-RUN git clone https://github.com/UMRoboticsTeam/umrt-ros-poe-cam.git /ws/src/poe-cam \
+RUN git clone https://github.com/UMRoboticsTeam/umrt-ros-poe-cam.git /ws/src/poe-cam
 
 RUN cd /ws/src/poe-cam && \
     source /opt/ros/humble/setup.bash && \
